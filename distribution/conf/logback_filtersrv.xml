@@ -67,7 +67,8 @@
 
     <logger name="RocketmqFiltersrv" additivity="false">
         <level value="INFO"/>
-        <appender-ref ref="RocketmqFiltersrvAppender"/>
+        <!--<appender-ref ref="RocketmqFiltersrvAppender"/>-->
+        <appender-ref ref="STDOUT"/>
     </logger>
 
     <logger name="RocketmqCommon" additivity="false">
@@ -78,6 +79,11 @@
     <logger name="RocketmqRemoting" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="RocketmqFiltersrvAppender"/>
+    </logger>
+
+    <logger name="RocketmqConsole" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="STDOUT"/>
     </logger>
 
     <root>

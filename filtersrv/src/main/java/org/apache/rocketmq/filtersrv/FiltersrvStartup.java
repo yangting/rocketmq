@@ -108,10 +108,19 @@ public class FiltersrvStartup {
                 .getFsServerCallbackExecutorThreads());
             nettyServerConfig.setServerWorkerThreads(filtersrvConfig.getFsServerWorkerThreads());
 
+            LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+            JoranConfigurator configurator = new JoranConfigurator();
+            configurator.setContext(lc);
+            lc.reset();
+            configurator.doConfigure(filtersrvConfig.getRocketmqHome() + "/conf/logback_filtersrv.xml");
+            log = LoggerFactory.getLogger(LoggerName.FILTERSRV_LOGGER_NAME);
+
             if (commandLine.hasOption('p')) {
-                MixAll.printObjectProperties(null, filtersrvConfig);
-                MixAll.printObjectProperties(null, nettyServerConfig);
-                System.exit(0);
+                Logger console = LoggerFactory.getLogger(LoggerName.BROKER_CONSOLE_NAME);
+
+                MixAll.printObjectProperties(console, filtersrvConfig);
+                MixAll.printObjectProperties(console, nettyServerConfig);
+//                System.exit(0);
             }
 
             MixAll.properties2Object(ServerUtil.commandLine2Properties(commandLine), filtersrvConfig);
@@ -119,13 +128,6 @@ public class FiltersrvStartup {
                 System.out.printf("Please set the %s variable in your environment to match the location of the RocketMQ installation%n", MixAll.ROCKETMQ_HOME_ENV);
                 System.exit(-2);
             }
-
-            LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-            JoranConfigurator configurator = new JoranConfigurator();
-            configurator.setContext(lc);
-            lc.reset();
-            configurator.doConfigure(filtersrvConfig.getRocketmqHome() + "/conf/logback_filtersrv.xml");
-            log = LoggerFactory.getLogger(LoggerName.FILTERSRV_LOGGER_NAME);
 
             final FiltersrvController controller =
                 new FiltersrvController(filtersrvConfig, nettyServerConfig);
